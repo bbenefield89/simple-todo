@@ -22,7 +22,13 @@ export default class FetchApi {
 	}
 
 	static put(path) {
-		// TODO: Implement
-		throw new Error('Not Implemented');
+    const req = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' }
+    }
+    
+		return fetch(path, req)
+        .then(data => data.json())
+        .catch(err => err)
 	}
 }
