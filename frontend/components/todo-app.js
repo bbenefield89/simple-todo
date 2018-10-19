@@ -1,6 +1,10 @@
 import React from 'react';
 import FetchApi from '../fetch-api';
 
+import Button from './misc/Button'
+import Label from './misc/Label'
+import TodoCounter from './TodoCounter/TodoCounter'
+
 const ENTER_KEY_CODE = 13;
 
 export default class TodoApp extends React.Component {
@@ -23,12 +27,13 @@ export default class TodoApp extends React.Component {
 			.post('/todo', { text: this.state.newText })
 			.then((newTodo) => {
 				const newTodos = Array.from(this.state.todos);
-				newTodos.push(newTodo);
+        newTodos.push(newTodo);
 				this.setState({ todos: newTodos, newText: '' });
 			})
 			.catch(() => alert('There was an error creating the todo'));
 	};
 
+  // as of right now this method isnt needed
 	handleDeleteRequest = (id) => {
 		FetchApi
 			.delete(`/todo/${id}`)
@@ -39,7 +44,23 @@ export default class TodoApp extends React.Component {
 				this.setState({ todos: newTodos });
 			})
 			.catch(() => alert('Error removing todo'));
-	};
+  };
+  
+  handlePutRequest = (id) => {
+    FetchApi
+      .put(`/todo/${ id }`)
+      .then(({ todo }) => {
+        const oldState = [ ...this.state.todos ]
+        const todoIndex = id - 1
+
+        oldState[ todoIndex ] = { ...todo }
+
+        this.setState({ todos: oldState })
+      })
+      .catch(() => {
+        throw new Error('Error updating todo')
+      })
+  }
 
 	handleChange = e => {
 		this.setState({ newText: e.target.value });
@@ -54,6 +75,9 @@ export default class TodoApp extends React.Component {
 		return (
 			<div>
 				<h1>todos</h1>
+
+        <TodoCounter todos={ this.state.todos } />
+
 				<input
 					autoFocus
 					onChange={this.handleChange}
@@ -61,15 +85,25 @@ export default class TodoApp extends React.Component {
 					placeholder="What needs to be done?"
 					value={this.state.newText}
 				/>
+
 				<ul>
-					{this.state.todos.map(todo => (
-						<li key={todo.id}>
-							<div className="view">
-								<label>{todo.text}</label>
-								<button onClick={() => this.handleDeleteRequest(todo.id)}>Remove Todo</button>
-							</div>
-						</li>
-					))}
+					{this.state.todos.map(todo => {
+						return (
+              <li key={todo.id}>
+                <div className="view">
+                  <Label
+                    bgColor={ todo.completed ? 'red' : null }
+                    labelText={ todo.text }
+                  />
+
+                  <Button
+                    onClick={ () => this.handlePutRequest(todo.id) }
+                    buttonText='Completed'
+                  />
+                </div>
+              </li>
+            )
+          })}
 				</ul>
 			</div>
 		);
