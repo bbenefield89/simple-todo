@@ -12,7 +12,8 @@ const APP_PORT = 3001;
 
 const compiler = webpack({
 	mode: 'development',
-	entry: ['whatwg-fetch', path.resolve(__dirname, '../frontend', 'app.js')],
+  entry: ['whatwg-fetch', path.resolve(__dirname, '../frontend', 'app.js')],
+  devtool: 'source-map',
 	module: {
 		rules: [
 			{
