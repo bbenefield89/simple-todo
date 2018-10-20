@@ -1,9 +1,10 @@
 import React from 'react';
 import FetchApi from '../fetch-api';
 
-import Button from './misc/Button'
-import Label from './misc/Label'
+import Header from './misc/Header'
+import Input from './misc/Input'
 import TodoCounter from './TodoCounter/TodoCounter'
+import TodosList from './TodosList/TodosList'
 
 const ENTER_KEY_CODE = 13;
 
@@ -22,9 +23,9 @@ export default class TodoApp extends React.Component {
 			.catch(() => alert('There was an error getting todos'));
 	};
 
-	createTodo = () => {
+	createTodo = text => {
 		FetchApi
-			.post('/todo', { text: this.state.newText })
+			.post('/todo', { text })
 			.then((newTodo) => {
 				const newTodos = Array.from(this.state.todos);
         newTodos.push(newTodo);
@@ -48,61 +49,43 @@ export default class TodoApp extends React.Component {
   
   handlePutRequest = async (id) => {
     const todo = await FetchApi.put(`/todo/${ id }`)
-    const oldState = [ ...this.state.todos ]
+    const state = [ ...this.state.todos ]
 
-    for (let i = 0; i < oldState.length; i++) {
-      if (oldState[i].id === todo.id) {
-        oldState[i] = todo
+    for (let i = 0; i < state.length; i++) {
+      if (state[i].id === todo.id) {
+        state[i] = todo
         break
       }
     }
 
-    this.setState({ todos: oldState })
+    this.setState({ todos: state })
   }
 
 	handleChange = e => {
 		this.setState({ newText: e.target.value });
 	};
 
-	handleKeyDown = e => {
-		if (e.keyCode !== ENTER_KEY_CODE) return;
-		this.createTodo();
+	handleKeyDown = (e, text) => {
+    if (e.keyCode !== ENTER_KEY_CODE) return;
+		this.createTodo(text);
 	};
 
 	render() {
 		return (
 			<div>
-				<h1>todos</h1>
+				<Header />
 
         <TodoCounter todos={ this.state.todos } />
 
-				<input
-					autoFocus
-					onChange={this.handleChange}
-					onKeyDown={this.handleKeyDown}
-					placeholder="What needs to be done?"
-					value={this.state.newText}
-				/>
+        <Input
+          handleChange={ this.handleChange }
+          handleKeyDown={ this.handleKeyDown }
+        />
 
-				<ul>
-					{this.state.todos.map(todo => {
-						return (
-              <li key={todo.id}>
-                <div className="view">
-                  <Label
-                    bgColor={ todo.completed ? 'red' : null }
-                    labelText={ todo.text }
-                  />
-
-                  <Button
-                    onClick={ () => this.handlePutRequest(todo.id) }
-                    buttonText='Completed'
-                  />
-                </div>
-              </li>
-            )
-          })}
-				</ul>
+        <TodosList
+          todos={ this.state.todos }
+          handlePutRequest={ this.handlePutRequest }
+        />
 			</div>
 		);
 	}
