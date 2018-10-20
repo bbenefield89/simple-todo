@@ -5,6 +5,9 @@ import WebpackDevServer from 'webpack-dev-server';
 import bodyParser from 'body-parser';
 import TodoRoutes from './todo-routes';
 
+import db from './database/connection'
+import Todo from './database/models/Todo'
+
 const APP_PORT = 3001;
 
 const compiler = webpack({
@@ -37,4 +40,12 @@ app.use(bodyParser.json());
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 app.use(TodoRoutes);
 
-app.listen(APP_PORT, () => { console.log(`App is now running on http://localhost:${APP_PORT}`); });
+db.authenticate()
+console.log('\n\n=====\nDB CONNECTED\n=====\n\n')
+
+Todo.sync()
+
+app.listen(APP_PORT, () => {
+  console.log(`App is now running on http://localhost:${APP_PORT}`);
+
+});
