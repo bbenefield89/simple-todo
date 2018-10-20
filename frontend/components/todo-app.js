@@ -46,20 +46,18 @@ export default class TodoApp extends React.Component {
 			.catch(() => alert('Error removing todo'));
   };
   
-  handlePutRequest = (id) => {
-    FetchApi
-      .put(`/todo/${ id }`)
-      .then(({ todo }) => {
-        const oldState = [ ...this.state.todos ]
-        const todoIndex = id - 1
+  handlePutRequest = async (id) => {
+    const todo = await FetchApi.put(`/todo/${ id }`)
+    const oldState = [ ...this.state.todos ]
 
-        oldState[ todoIndex ] = { ...todo }
+    for (let i = 0; i < oldState.length; i++) {
+      if (oldState[i].id === todo.id) {
+        oldState[i] = todo
+        break
+      }
+    }
 
-        this.setState({ todos: oldState })
-      })
-      .catch(() => {
-        throw new Error('Error updating todo')
-      })
+    this.setState({ todos: oldState })
   }
 
 	handleChange = e => {
