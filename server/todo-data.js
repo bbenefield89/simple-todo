@@ -1,23 +1,20 @@
-let todosCreated = 1;
-let todos = [{
-	id: 1,
-  text: 'Finish coding exercise',
-  completed: false
-}];
+import Todo from './database/models/Todo'
 
 export default class TodoData {
-	static create(todo) {
-		return new Promise((resolve) => {
-			todo.id = ++todosCreated;
-			todos.push(todo);
-			resolve(todo);
-		});
+	static async create({ text }) {
+    const todo = await Todo.create({ text, completed: false })
+    return todo
 	}
 
 	static findAll() {
-		return new Promise((resolve) => resolve(todos));
+    return Todo.findAll({
+      order: [
+        [ 'createdAt', 'ASC' ]
+      ]
+    })
 	}
 
+  // no longer needed
 	static delete(id) {
 		return new Promise((resolve, reject) => {
       const todoIndex = todos.findIndex(todo => todo.id.toString() === id.toString());
@@ -27,13 +24,13 @@ export default class TodoData {
 		})
 	}
 
-	static update(id) {
-		return new Promise((resolve, reject) => {
-      const todo = todos.find(todo => String(todo.id) === String(id))
+	static async update(id) {
+    const todo = await Todo.findById(id)
 
-      todo.completed = !todo.completed
-      
-      resolve({ todo })
-		})
+    await todo.update({
+      completed: !todo.completed
+    })
+
+    return todo
 	}
 }
