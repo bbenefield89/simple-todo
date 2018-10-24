@@ -1,3 +1,22 @@
+# Solution
+- `git clone https://github.com/bbenefield89/simple-todo.git`
+- `git fetch`
+- `git checkout brandon/solution`
+- Check that your node version is at v10 or greater with `node --version`
+- `yarn`
+- In the root directory create a `.env` file and place a valid PostgreSQL URL variable inside, e.g. `DATABASE_URL=postgresql://<<psql username>>:<<psql password>>@127.0.0.1:5432/simple_todo` where PostgreSQL is being served locally, `127.0.0.1`, from default port `5432` and looking for the database named `simple_todo`
+- `yarn start`
+
+## FAQ
+Q: What if I don't have psql installed locally?
+A: https://www.postgresql.org/download/
+
+Q: How do I connect to PostgreSQL?
+A: https://www.a2hosting.com/kb/developer-corner/postgresql/connect-to-postgresql-from-the-command-line
+
+Q: How do I create and verify I have created a new DB in PostgreSQL?
+A: Once connected to psql from the terminal you can run `create database simple_todo;` and verify it has been created with the `\l` (backslash + L) and you should see a new entry in the list of databases.
+
 # Simple Todo
 This repository is intended to be a very basic full-stack implementation of a todo list meant to serve as a coding exercise for interview candidates.
 
