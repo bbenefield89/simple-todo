@@ -8,13 +8,13 @@
 - `yarn start`
 
 ## FAQ
-Q: What if I don't have psql installed locally?
+Q: What if I don't have psql installed locally?  
 A: https://www.postgresql.org/download/
 
-Q: How do I connect to PostgreSQL?
+Q: How do I connect to PostgreSQL?  
 A: https://www.a2hosting.com/kb/developer-corner/postgresql/connect-to-postgresql-from-the-command-line
 
-Q: How do I create and verify I have created a new DB in PostgreSQL?
+Q: How do I create and verify I have created a new DB in PostgreSQL?  
 A: Once connected to psql from the terminal you can run `create database simple_todo;` and verify it has been created with the `\l` (backslash + L) and you should see a new entry in the list of databases.
 
 # Simple Todo
